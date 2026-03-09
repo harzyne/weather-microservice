@@ -1,0 +1,15 @@
+D:\weather-microservice\src\Weather.Application\bin\Debug\net9.0\Weather.Application.deps.json
+D:\weather-microservice\src\Weather.Application\bin\Debug\net9.0\Weather.Application.dll
+D:\weather-microservice\src\Weather.Application\bin\Debug\net9.0\Weather.Application.pdb
+D:\weather-microservice\src\Weather.Application\bin\Debug\net9.0\Weather.Domain.dll
+D:\weather-microservice\src\Weather.Application\bin\Debug\net9.0\Weather.Domain.pdb
+D:\weather-microservice\src\Weather.Application\obj\Debug\net9.0\Weather.Application.csproj.AssemblyReference.cache
+D:\weather-microservice\src\Weather.Application\obj\Debug\net9.0\Weather.Application.GeneratedMSBuildEditorConfig.editorconfig
+D:\weather-microservice\src\Weather.Application\obj\Debug\net9.0\Weather.Application.AssemblyInfoInputs.cache
+D:\weather-microservice\src\Weather.Application\obj\Debug\net9.0\Weather.Application.AssemblyInfo.cs
+D:\weather-microservice\src\Weather.Application\obj\Debug\net9.0\Weather.Application.csproj.CoreCompileInputs.cache
+D:\weather-microservice\src\Weather.Application\obj\Debug\net9.0\Weather..39DBAE9F.Up2Date
+D:\weather-microservice\src\Weather.Application\obj\Debug\net9.0\Weather.Application.dll
+D:\weather-microservice\src\Weather.Application\obj\Debug\net9.0\refint\Weather.Application.dll
+D:\weather-microservice\src\Weather.Application\obj\Debug\net9.0\Weather.Application.pdb
+D:\weather-microservice\src\Weather.Application\obj\Debug\net9.0\ref\Weather.Application.dll
