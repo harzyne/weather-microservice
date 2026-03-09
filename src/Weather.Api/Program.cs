@@ -7,6 +7,11 @@ using Weather.Api.Data;
 using Weather.Api.Services;
 using Microsoft.Extensions.Hosting;
 using Weather.Api.Background;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,8 +40,36 @@ builder.Services.AddScoped<DataGovSgService>();
 // Register background worker
 builder.Services.AddHostedService<WeatherPoller>();
 
-// Simple API key authentication for protected endpoints
-var apiKey = builder.Configuration["ApiKey:Key"] ?? "dev-key";
+// Read JWT settings
+var jwtSection = builder.Configuration.GetSection("Jwt");
+var issuer = jwtSection["Issuer"] ?? "local-issuer";
+var audience = jwtSection["Audience"] ?? "local-audience";
+var secret = jwtSection["Secret"] ?? "dev-secret-change-me";
+var devMode = builder.Configuration.GetValue<bool?>("Auth:DevMode") ?? true;
+
+var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidIssuer = issuer,
+        ValidateAudience = true,
+        ValidAudience = audience,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = key,
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.FromSeconds(30)
+    };
+});
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddHttpsRedirection(options =>
 {
@@ -61,21 +94,21 @@ app.UseHttpsRedirection();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-// Minimal API key middleware for write/export endpoints
-app.Use(async (context, next) =>
+// Dev-only token endpoint
+if (app.Environment.IsDevelopment() && devMode)
 {
-    var path = context.Request.Path.Value ?? string.Empty;
-    if (path.StartsWith("/api/subscriptions") || path.StartsWith("/api/export"))
+    app.MapGet("/dev/token", () =>
     {
-        if (!context.Request.Headers.TryGetValue("x-api-key", out var key) || key != apiKey)
-        {
-            context.Response.StatusCode = 401;
-            await context.Response.WriteAsync("Unauthorized");
-            return;
-        }
-    }
-    await next();
-});
+        var claims = new[] { new Claim(JwtRegisteredClaimNames.Sub, "dev-user"), new Claim("role", "tester") };
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        var token = new JwtSecurityToken(issuer, audience, claims, expires: DateTime.UtcNow.AddHours(1), signingCredentials: creds);
+        return Results.Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
+    });
+}
+
+// Ensure authentication/authorization middleware are in the pipeline
+app.UseAuthentication();
+app.UseAuthorization();
 
 var summaries = new[]
 {
@@ -135,7 +168,7 @@ app.MapGet("/api/weather/historical", async (WeatherDbContext db, string? locati
 });
 
 // CSV export - protected by x-api-key
-app.MapGet("/api/export/csv", async (WeatherDbContext db, string? location, DateTime? from, DateTime? to, ILogger<Program> logger) =>
+app.MapGet("/api/export/csv", [Microsoft.AspNetCore.Authorization.Authorize] async (WeatherDbContext db, string? location, DateTime? from, DateTime? to, ILogger<Program> logger) =>
 {
     try
     {
@@ -172,7 +205,7 @@ app.MapGet("/api/export/csv", async (WeatherDbContext db, string? location, Date
 });
 
 // Subscription endpoints with validation and logging
-app.MapPost("/api/subscriptions", async (WeatherDbContext db, SubscriptionInput input, ILogger<Program> logger) =>
+app.MapPost("/api/subscriptions", [Microsoft.AspNetCore.Authorization.Authorize] async (WeatherDbContext db, SubscriptionInput input, ILogger<Program> logger) =>
 {
     try
     {
@@ -209,7 +242,7 @@ app.MapGet("/api/subscriptions", async (WeatherDbContext db, ILogger<Program> lo
     }
 });
 
-app.MapDelete("/api/subscriptions/{id}", async (WeatherDbContext db, int id, ILogger<Program> logger) =>
+app.MapDelete("/api/subscriptions/{id}", [Microsoft.AspNetCore.Authorization.Authorize] async (WeatherDbContext db, int id, ILogger<Program> logger) =>
 {
     try
     {
