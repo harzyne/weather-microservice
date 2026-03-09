@@ -80,3 +80,11 @@ D:\weather-microservice\src\Weather.Api\bin\Debug\net9.0\runtimes\win-arm64\nati
 D:\weather-microservice\src\Weather.Api\bin\Debug\net9.0\runtimes\win-x64\native\e_sqlite3.dll
 D:\weather-microservice\src\Weather.Api\bin\Debug\net9.0\runtimes\win-x86\native\e_sqlite3.dll
 D:\weather-microservice\src\Weather.Api\obj\Debug\net9.0\Weather.Api.sourcelink.json
+D:\weather-microservice\src\Weather.Api\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\weather-microservice\src\Weather.Api\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
+D:\weather-microservice\src\Weather.Api\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\weather-microservice\src\Weather.Api\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
+D:\weather-microservice\src\Weather.Api\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.dll
+D:\weather-microservice\src\Weather.Api\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+D:\weather-microservice\src\Weather.Api\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
+D:\weather-microservice\src\Weather.Api\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll

@@ -7,11 +7,11 @@ using Weather.Api.Services;
 
 namespace Weather.Tests
 {
-    public class WeatherApiTests : IClassFixture<WebApplicationFactory<Program>>
+    public class WeatherApiTests : IClassFixture<CustomWebApplicationFactory>
     {
-        private readonly WebApplicationFactory<Program> _factory;
+        private readonly CustomWebApplicationFactory _factory;
 
-        public WeatherApiTests(WebApplicationFactory<Program> factory)
+        public WeatherApiTests(CustomWebApplicationFactory factory)
         {
             _factory = factory;
         }

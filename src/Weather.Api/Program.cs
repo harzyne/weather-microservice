@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Security.Cryptography;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,7 +48,11 @@ var audience = jwtSection["Audience"] ?? "local-audience";
 var secret = jwtSection["Secret"] ?? "dev-secret-change-me";
 var devMode = builder.Configuration.GetValue<bool?>("Auth:DevMode") ?? true;
 
-var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
+// var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
+// Ensure key is 256-bit by hashing secret
+var secretBytes = Encoding.UTF8.GetBytes(secret ?? string.Empty);
+var hashed = SHA256.HashData(secretBytes);
+var key = new SymmetricSecurityKey(hashed);
 
 builder.Services.AddAuthentication(options =>
 {
@@ -103,6 +108,42 @@ if (app.Environment.IsDevelopment() && devMode)
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         var token = new JwtSecurityToken(issuer, audience, claims, expires: DateTime.UtcNow.AddHours(1), signingCredentials: creds);
         return Results.Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
+    });
+}
+
+// Dev-mode shortcut: validate token manually and set HttpContext.User so tests can use /dev/token
+if (app.Environment.IsDevelopment() && devMode)
+{
+    app.Use(async (context, next) =>
+    {
+        if (context.Request.Headers.TryGetValue("Authorization", out var auth) && auth.ToString().StartsWith("Bearer "))
+        {
+            var token = auth.ToString().Substring("Bearer ".Length).Trim();
+            var handler = new JwtSecurityTokenHandler();
+            try
+            {
+                var validationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = issuer,
+                    ValidateAudience = true,
+                    ValidAudience = audience,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = key,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.FromSeconds(30)
+                };
+
+                var principal = handler.ValidateToken(token, validationParameters, out var validatedToken);
+                context.User = principal;
+            }
+            catch (Exception)
+            {
+                // leave unauthenticated - authentication middleware will handle
+            }
+        }
+
+        await next();
     });
 }
 
