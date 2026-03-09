@@ -13,3 +13,4 @@ D:\weather-microservice\src\Weather.Application\obj\Debug\net9.0\Weather.Applica
 D:\weather-microservice\src\Weather.Application\obj\Debug\net9.0\refint\Weather.Application.dll
 D:\weather-microservice\src\Weather.Application\obj\Debug\net9.0\Weather.Application.pdb
 D:\weather-microservice\src\Weather.Application\obj\Debug\net9.0\ref\Weather.Application.dll
+D:\weather-microservice\src\Weather.Application\obj\Debug\net9.0\Weather.Application.sourcelink.json

@@ -9,3 +9,4 @@ D:\weather-microservice\src\Weather.Domain\obj\Debug\net9.0\Weather.Domain.dll
 D:\weather-microservice\src\Weather.Domain\obj\Debug\net9.0\refint\Weather.Domain.dll
 D:\weather-microservice\src\Weather.Domain\obj\Debug\net9.0\Weather.Domain.pdb
 D:\weather-microservice\src\Weather.Domain\obj\Debug\net9.0\ref\Weather.Domain.dll
+D:\weather-microservice\src\Weather.Domain\obj\Debug\net9.0\Weather.Domain.sourcelink.json

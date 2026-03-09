@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Weather.Api.Services
 {
-    internal class OpenWeatherMapService : IWeatherService
+    public class OpenWeatherMapService : IWeatherService
     {
         private readonly HttpClient _http;
         private readonly string _apiKey;

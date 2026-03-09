@@ -15,3 +15,4 @@ D:\weather-microservice\src\Weather.Infrastructure\obj\Debug\net9.0\Weather.Infr
 D:\weather-microservice\src\Weather.Infrastructure\obj\Debug\net9.0\refint\Weather.Infrastructure.dll
 D:\weather-microservice\src\Weather.Infrastructure\obj\Debug\net9.0\Weather.Infrastructure.pdb
 D:\weather-microservice\src\Weather.Infrastructure\obj\Debug\net9.0\ref\Weather.Infrastructure.dll
+D:\weather-microservice\src\Weather.Infrastructure\obj\Debug\net9.0\Weather.Infrastructure.sourcelink.json
